@@ -4,15 +4,59 @@
 <h1>Hello World</h1>
 <p>I'm hosted with GitHub Pages.</p>
 
-<link href="https://cdn.jsdelivr.net/npm/@n8n/chat/dist/style.css" rel="stylesheet" />
-<script type="module">
+
+</body>
+</html>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>InnoMedia RAG Flow</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f0f4f8;
+    }
+    .box {
+      background: #ffffff;
+      padding: 40px 60px;
+      border-radius: 16px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+    .box img {
+      max-width: 200px;
+      height: auto;
+      margin-bottom: 20px;
+    }
+    .box h1 {
+      margin: 0;
+      font-size: 1.8rem;
+      color: #2c3e50;
+    }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <img src="https://www.innomedia.com/wp-content/uploads/2013/10/innomedia_logo.png" alt="InnoMedia Logo" />
+    <h1>InnoMedia RAG Flow for MTA9338</h1>
+  </div>
+
+  <link href="https://cdn.jsdelivr.net/npm/@n8n/chat/dist/style.css" rel="stylesheet" />
+  <script type="module">
 	import { createChat } from 'https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.bundle.es.js';
 
 	createChat({
 		webhookUrl: 'https://lovely-divine-quail.ngrok-free.app/webhook/ce825f01-a2ef-43b4-ac19-28e562497ce8/chat'
 	});
-</script>
+  </script>
 
 </body>
 </html>
-

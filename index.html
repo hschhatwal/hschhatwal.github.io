@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>InnoMedia RAG Flow</title>
+  <link href="https://cdn.jsdelivr.net/npm/@n8n/chat/dist/style.css" rel="stylesheet" />
   <style>
     body {
       margin: 0;
@@ -31,6 +32,33 @@
       font-size: 1.8rem;
       color: #2c3e50;
     }
+		:root {
+			--chat--color-primary: #006eb6;
+			--chat--color-primary-shade-50: #00c4b0;
+			--chat--color-primary-shade-100: #00c4b0;
+			--chat--color-secondary: #20b69e;
+			--chat--color-secondary-shade-50: #1ca08a;
+			--chat--color-white: #ffffff;
+			--chat--color-light: #f2f4f8;
+			--chat--color-light-shade-50: #e6e9f1;
+			--chat--color-light-shade-100: #c2c5cc;
+			--chat--color-medium: #d2d4d9;
+			--chat--color-dark: #101330;
+			--chat--color-disabled: #777980;
+			--chat--color-typing: #404040;
+			
+			--chat--spacing: 0.8rem;
+			
+			--chat--header--background: #006eb6;
+			--chat--heading--font-size: 1.5em;
+			--chat--subtitle--line-height: 1.5;
+			
+			--chat--message--font-size: 0.8rem;
+			--chat--message-line-height: 1.5;
+			--chat--message--user--background: #006eb6;
+			
+		}
+		
   </style>
 </head>
 <body>
@@ -39,7 +67,7 @@
     <h1>InnoMedia RAG Flow for MTA9338</h1>
   </div>
 
-  <link href="https://cdn.jsdelivr.net/npm/@n8n/chat/dist/style.css" rel="stylesheet" />
+
   <script type="module">
 	import { createChat } from 'https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.bundle.es.js';
 

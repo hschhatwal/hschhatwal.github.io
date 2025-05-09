@@ -3,5 +3,16 @@
 <body>
 <h1>Hello World</h1>
 <p>I'm hosted with GitHub Pages.</p>
+
+<link href="https://cdn.jsdelivr.net/npm/@n8n/chat/dist/style.css" rel="stylesheet" />
+<script type="module">
+	import { createChat } from 'https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.bundle.es.js';
+
+	createChat({
+		webhookUrl: 'https://lovely-divine-quail.ngrok-free.app/webhook/ce825f01-a2ef-43b4-ac19-28e562497ce8/chat'
+	});
+</script>
+
 </body>
 </html>
+

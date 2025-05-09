@@ -1,14 +1,4 @@
 <!DOCTYPE html>
-<html>
-<body>
-<h1>Hello World</h1>
-<p>I'm hosted with GitHub Pages.</p>
-
-
-</body>
-</html>
-
-<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -25,7 +15,7 @@
       background: #f0f4f8;
     }
     .box {
-      background: #ffffff;
+      background: #fbd415;
       padding: 40px 60px;
       border-radius: 16px;
       box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
@@ -45,7 +35,7 @@
 </head>
 <body>
   <div class="box">
-    <img src="https://www.innomedia.com/wp-content/uploads/2013/10/innomedia_logo.png" alt="InnoMedia Logo" />
+    <img src="logo-layer-80x89.png" alt="InnoMedia Logo" />
     <h1>InnoMedia RAG Flow for MTA9338</h1>
   </div>
 
@@ -54,7 +44,20 @@
 	import { createChat } from 'https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.bundle.es.js';
 
 	createChat({
-		webhookUrl: 'https://lovely-divine-quail.ngrok-free.app/webhook/ce825f01-a2ef-43b4-ac19-28e562497ce8/chat'
+		webhookUrl: 'https://lovely-divine-quail.ngrok-free.app/webhook/ce825f01-a2ef-43b4-ac19-28e562497ce8/chat',
+		initialMessages: [
+			'Hi there! 👋',
+			'My name is Buddytalk. How can I assist you today?'
+		],
+		i18n: {
+			en: {
+				title: 'InnoMedia Support',
+				subtitle: "Start a chat. We're here to help you 24/7.",
+				footer: '',
+				getStarted: 'New Conversation',
+				inputPlaceholder: 'Type your question..',
+			},
+		},
 	});
   </script>
 

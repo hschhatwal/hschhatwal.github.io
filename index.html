@@ -33,6 +33,11 @@
       font-size: 1.8rem;
       color: #2c3e50;
     }
+		.box h2 {
+      margin: 0;
+      font-size: 1.2rem;
+      color: #2c3e50;
+    }
 		:root {
 			--chat--color-primary: #006eb6;
 			--chat--color-primary-shade-50: #00c4b0;
@@ -74,6 +79,7 @@
     <img src="logo-layer-80x89.png" alt="InnoMedia Logo" />
     <h1>InnoMedia RAG Flow for</h1>
 		<h1>MTA9338 & ESBC Products</h1>
+		<h2>(also answers RMA questions)
   </div>
 
 
@@ -81,7 +87,7 @@
 	import { createChat } from 'https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.bundle.es.js';
 
 	createChat({
-		webhookUrl: 'https://lovely-divine-quail.ngrok-free.app/webhook/ce825f01-a2ef-43b4-ac19-28e562497ce8/chat',
+		webhookUrl: 'https://ai-demo.innomedia.com:5678/webhook/ce825f01-a2ef-43b4-ac19-28e562497ce8/chat',
 		initialMessages: [
 			'Hi there! 👋',
 			'My name is Buddytalk. How can I assist you today?'

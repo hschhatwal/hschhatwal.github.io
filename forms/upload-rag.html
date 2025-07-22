@@ -144,13 +144,13 @@
   </form>
   <div id="result"></div>
   <hr class="separator" />
-  <footer>InnoMedia copyright 2025. All Rights reserved</footer>
+  <footer>&copy; InnoMedia 2025. All Rights reserved</footer>
 
   <script>
     const form = document.getElementById('ragForm');
     const company = document.getElementById('company');
     const operation = document.getElementById('operation');
-    const files = document.getElementById('files');
+    const filesInput = document.getElementById('files');
     const result = document.getElementById('result');
 
     const companyFeedback = document.getElementById('companyFeedback');
@@ -158,9 +158,9 @@
     const fileFeedback = document.getElementById('fileFeedback');
 
     operation.addEventListener('change', () => {
-      files.disabled = operation.value !== 'upload';
+      filesInput.disabled = operation.value !== 'upload';
       if (operation.value !== 'upload') {
-        files.value = '';
+        filesInput.value = '';
         fileFeedback.textContent = '';
       }
     });
@@ -184,12 +184,12 @@
         valid = false;
       }
 
-      if (operation.value === 'upload' && files.files.length === 0) {
+      if (operation.value === 'upload' && filesInput.files.length === 0) {
         fileFeedback.textContent = 'Please choose files to upload.';
         valid = false;
       }
 
-      if (files.files.length > 10) {
+      if (filesInput.files.length > 10) {
         fileFeedback.textContent = 'You can only upload up to 10 files.';
         valid = false;
       }
@@ -198,25 +198,45 @@
 
       result.innerHTML = '<span>Operation Started</span><div class="spinner"></div>';
 
-      const formData = new FormData();
-      formData.append('company', company.value);
-      for (let file of files.files) {
-        formData.append('files', file, file.name);
-      }
+      const files = Array.from(filesInput.files);
+      const uploads = await Promise.all(
+        files.map(file => toBase64(file).then(content => ({
+          filename: file.name,
+          mimeType: file.type,
+          content: content.split(',')[1] // remove base64 prefix
+        })))
+      );
+
+      const body = {
+        company: company.value,
+        operation: operation.value,
+        files: uploads
+      };
 
       try {
-        await fetch('https://script.google.com/macros/s/AKfycbyHJ7O19mghX2vEaZ4SDMgzpf726Y49oHWUq1FI0zHNbX83NmJ01tEnAfd5GC9zieUN7Q/exec', {
+        await fetch('https://script.google.com/macros/s/AKfycbw4sfoVLa_OTg1FQn-jc0JJV5vlrJQtv3bOGpiZxbEM4ouCaXL4Vn5_3xKeLKiwSqwX/exec', {
           method: 'POST',
-          body: formData
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body)
         });
-      } catch (error) {
-        console.error(error);
+      } catch (err) {
+        console.error('Upload error:', err);
       }
 
       setTimeout(() => {
         result.innerHTML = '';
       }, 5000);
     });
+
+    function toBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = error => reject(error);
+      });
+    }
   </script>
 </body>
 </html>
+

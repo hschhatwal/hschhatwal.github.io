@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>InnoMedia Auto RAG Upload Page</title>
+  <link rel="icon" type="image/png" href="logo-layer-80x89.png">
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 1rem;
+      background: #f9f9f9;
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    #logo {
+      width: 60px;
+      height: auto;
+      border-radius: 6px;
+    }
+    h1 {
+      flex-grow: 1;
+      text-align: center;
+      font-size: 1.8rem;
+      padding-right: 48px;
+      margin: 0;
+    }
+    hr.separator {
+      border: none;
+      border-top: 1.5px solid #ddd;
+      margin: 1rem 0 2rem;
+    }
+    form {
+      max-width: 480px;
+      margin: 0 auto;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    label {
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+      display: block;
+    }
+    select, input[type="file"] {
+      width: 100%;
+      padding: 0.5rem 0.75rem;
+      font-size: 1rem;
+      border: 1.5px solid #ccc;
+      border-radius: 6px;
+    }
+    button {
+      width: 100%;
+      padding: 0.75rem;
+      font-size: 1.1rem;
+      font-weight: 600;
+      background-color: #0078d7;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    button:hover:not(:disabled) {
+      background-color: #005ea2;
+    }
+    button:disabled {
+      background-color: #a0a0a0;
+      cursor: not-allowed;
+    }
+    .feedback {
+      color: #cc3300;
+      font-size: 0.9rem;
+      min-height: 1.25rem;
+    }
+    #result {
+      text-align: center;
+      font-weight: 600;
+      font-size: 1.2rem;
+      color: #0078d7;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      min-height: 1.5rem;
+      margin-top: 1rem;
+    }
+    .spinner {
+      border: 3px solid #ccc;
+      border-top: 3px solid #0078d7;
+      border-radius: 50%;
+      width: 18px;
+      height: 18px;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    footer {
+      margin-top: auto;
+      text-align: center;
+      font-size: 0.9rem;
+      color: #888;
+      padding: 1rem 0 0;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img id="logo" src="logo-layer-80x89.png" alt="Logo" />
+    <h1>InnoMedia Auto RAG Upload Page</h1>
+  </header>
+  <hr class="separator" />
+  <form id="ragForm" novalidate>
+    <div>
+      <label for="company">Choose Company Name</label>
+      <select id="company" required>
+        <option value="">Please choose an option</option>
+        <option value="company-a">Company A</option>
+        <option value="company-b">Company B</option>
+        <option value="company-c">Company C</option>
+      </select>
+      <div id="companyFeedback" class="feedback"></div>
+    </div>
+
+    <div>
+      <label for="operation">Choose Operation</label>
+      <select id="operation" required>
+        <option value="">Please choose an option</option>
+        <option value="upload">Upload Files 📤</option>
+        <option value="delete" disabled>Delete All 🗑️</option>
+      </select>
+      <div id="operationFeedback" class="feedback"></div>
+    </div>
+
+    <div>
+      <label for="files">Choose Files to Upload (max 10)</label>
+      <input type="file" id="files" multiple />
+      <div id="fileFeedback" class="feedback"></div>
+    </div>
+
+    <button type="submit">Submit</button>
+  </form>
+  <div id="result"></div>
+  <hr class="separator" />
+  <footer>&copy; InnoMedia 2025. All Rights reserved</footer>
+
+  <script>
+    const form = document.getElementById('ragForm');
+    const company = document.getElementById('company');
+    const operation = document.getElementById('operation');
+    const filesInput = document.getElementById('files');
+    const companyFeedback = document.getElementById('companyFeedback');
+    const operationFeedback = document.getElementById('operationFeedback');
+    const fileFeedback = document.getElementById('fileFeedback');
+    const resultDiv = document.getElementById('result');
+
+    function updateFileInputState() {
+      const isUpload = operation.value === 'upload';
+      filesInput.disabled = !isUpload;
+      if (!isUpload) {
+        fileFeedback.textContent = '';
+        filesInput.value = '';
+      }
+    }
+
+    operation.addEventListener('change', updateFileInputState);
+    updateFileInputState();
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      let isValid = true;
+      companyFeedback.textContent = '';
+      operationFeedback.textContent = '';
+      fileFeedback.textContent = '';
+      resultDiv.innerHTML = '';
+
+      if (!company.value) {
+        companyFeedback.textContent = 'Please select a company.';
+        isValid = false;
+      }
+
+      if (!operation.value) {
+        operationFeedback.textContent = 'Please select an operation.';
+        isValid = false;
+      }
+
+      if (operation.value === 'upload' && filesInput.files.length === 0) {
+        fileFeedback.textContent = 'Please choose at least one file.';
+        isValid = false;
+      }
+
+      if (filesInput.files.length > 10) {
+        fileFeedback.textContent = 'You can upload a maximum of 10 files.';
+        isValid = false;
+      }
+
+      if (!isValid) return;
+
+      resultDiv.innerHTML = '<span>Operation Started</span><div class="spinner"></div>';
+
+      const fileNames = operation.value === 'upload'
+        ? Array.from(filesInput.files).map(f => f.name).join(', ')
+        : null;
+
+      const body = {
+        'company-name': company.value,
+        'operation': operation.value,
+        'files': fileNames || 'null'
+      };
+
+      try {
+        await fetch('https://ai-demo.innomedia.com:5678/webhook/8cea9525-dba6-46e6-b8c3-87719a4468fd', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body)
+        });
+      } catch (err) {
+        console.error('Failed to send request', err);
+      }
+
+      setTimeout(() => {
+        resultDiv.innerHTML = '';
+      }, 5000);
+    });
+  </script>
+</body>
+</html>

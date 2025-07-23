@@ -5,33 +5,50 @@
 </head>
 <body>
   <h2>File Upload Test</h2>
-  <form id="form">
-    <input name="file" id="uploadfile" type="file" />
-    <input id="submit" type="submit" />
+  <form id="uploadForm" enctype="multipart/form-data">
+    <label>Company:
+      <select name="company" required>
+        <option value="company-a">Company A</option>
+        <option value="company-b">Company B</option>
+      </select>
+    </label>
+    <br><br>
+    <label>Operation:
+      <select name="operation" required>
+        <option value="upload">Upload Files 📤</option>
+      </select>
+    </label>
+    <br><br>
+    <label>Choose file:
+      <input type="file" name="file" multiple required>
+    </label>
+    <br><br>
+    <button type="submit">Submit</button>
   </form>
+  <div id="status"></div>
 
   <script>
-    const form = document.getElementById("form");
-    form.addEventListener("submit", (e) => {
-      e.preventDefault();
-      const file = form.file.files[0];
-      const fr = new FileReader();
-      fr.readAsArrayBuffer(file);
-      fr.onload = (f) => {
-        const url = "https://script.google.com/macros/s/AKfycbw4sfoVLa_OTg1FQn-jc0JJV5vlrJQtv3bOGpiZxbEM4ouCaXL4Vn5_3xKeLKiwSqwX/exec"; // Please set the URL of Web Apps.
+    const form = document.getElementById("uploadForm");
+    const status = document.getElementById("status");
 
-        const qs = new URLSearchParams({
-          filename: file.name,
-          mimeType: file.type,
-        });
-        fetch(`${url}?${qs}`, {
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      status.textContent = "Uploading...";
+
+      const formData = new FormData(form);
+
+      try {
+        const res = await fetch("https://script.google.com/macros/s/AKfycbw4sfoVLa_OTg1FQn-jc0JJV5vlrJQtv3bOGpiZxbEM4ouCaXL4Vn5_3xKeLKiwSqwX/exec", {
           method: "POST",
-          body: JSON.stringify([...new Int8Array(f.target.result)]),
-        })
-          .then((res) => res.json())
-          .then(console.log)
-          .catch(console.log);
-      };
+          body: formData
+        });
+
+        const text = await res.text();
+        status.textContent = text;
+      } catch (err) {
+        console.error(err);
+        status.textContent = "❌ Upload failed: " + err.message;
+      }
     });
   </script>
 </body>

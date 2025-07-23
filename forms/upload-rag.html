@@ -4,9 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>InnoMedia Auto RAG Upload Page</title>
-  <link rel="icon" href="logo-layer-80x89.png" />
+  <link rel="icon" type="image/png" href="logo-layer-80x89.png">
   <style>
-    /* [Same styles as before, unchanged for brevity] */
+    * {
+      box-sizing: border-box;
+    }
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       margin: 0;
@@ -17,153 +19,366 @@
       flex-direction: column;
       min-height: 100vh;
     }
-    header { display: flex; align-items: center; margin-bottom: 1rem; }
-    #logo { width: 60px; height: auto; border-radius: 6px; }
-    h1 { flex-grow: 1; text-align: center; font-size: 1.8rem; padding-right: 48px; margin: 0; }
-    hr.separator { border: none; border-top: 1.5px solid #ddd; margin: 1rem 0 2rem; }
+    header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    #logo {
+      width: 60px;
+      height: auto;
+      object-fit: contain;
+      border-radius: 6px;
+      display: block;
+    }    
+    h1 {
+      flex-grow: 1;
+      text-align: center;
+      font-weight: 700;
+      font-size: 1.8rem;
+      margin: 0;
+      padding-right: 48px; /* to balance logo on left */
+    }
+    hr.separator {
+      border: none;
+      border-top: 1.5px solid #ddd;
+      margin: 1rem 0 2rem;
+      width: 100%;
+    }
     form {
-      max-width: 480px; margin: 0 auto; width: 100%; display: flex; flex-direction: column; gap: 1rem;
+      max-width: 480px;
+      margin: 0 auto;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
     }
-    label { font-weight: 600; }
-    select, input[type="file"], button {
-      width: 100%; padding: 0.5rem 0.75rem; font-size: 1rem;
-      border: 1.5px solid #ccc; border-radius: 6px;
+    label {
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+      display: block;
     }
-    button {
-      background-color: #0078d7; color: white; font-weight: bold; cursor: pointer;
+    select, input[type="file"] {
+      width: 100%;
+      padding: 0.5rem 0.75rem;
+      font-size: 1rem;
+      border: 1.5px solid #ccc;
+      border-radius: 6px;
+      transition: border-color 0.3s ease, background-color 0.3s ease;
     }
-    button:hover:not(:disabled) { background-color: #005ea2; }
-    button:disabled { background-color: #aaa; cursor: not-allowed; }
-    .feedback { color: #cc3300; font-size: 0.9rem; min-height: 1.25rem; }
+    select:focus, input[type="file"]:focus {
+      outline: none;
+      border-color: #0078d7;
+      box-shadow: 0 0 5px #a1c8ff;
+    }
+    select:disabled, input[type="file"]:disabled {
+      background-color: #f5f5f5;
+      color: #999;
+      border-color: #ddd;
+      cursor: not-allowed;
+    }
+    .file-input-wrapper {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+    #fileDisplay {
+      min-height: 2.5rem;
+      padding: 0.5rem 0.75rem;
+      border: 1.5px solid #ccc;
+      border-radius: 6px;
+      background: white;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      color: #666;
+      cursor: pointer;
+      transition: border-color 0.3s ease, background-color 0.3s ease;
+    }
+    #fileDisplay:hover:not(.disabled) {
+      border-color: #0078d7;
+    }
+    #fileDisplay.disabled {
+      background-color: #f5f5f5;
+      color: #999;
+      border-color: #ddd;
+      cursor: not-allowed;
+    }
+    #fileInput {
+      position: absolute;
+      opacity: 0;
+      width: 100%;
+      height: 100%;
+      cursor: pointer;
+    }
+    #fileInput:disabled {
+      cursor: not-allowed;
+    }
+    button#submit-btn {
+      width: 100%;
+      padding: 0.75rem;
+      font-size: 1.1rem;
+      font-weight: 600;
+      background-color: #0078d7;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    button#submit-btn:hover:not(:disabled) {
+      background-color: #005ea2;
+    }
+    button#submit-btn:disabled {
+      background-color: #a0a0a0;
+      cursor: not-allowed;
+    }
+    .feedback {
+      color: #cc3300;
+      font-size: 0.9rem;
+      margin-top: 0.25rem;
+      margin-bottom: 0.5rem;
+      min-height: 1.25rem;
+    }
     #result {
-      text-align: center; font-weight: 600; font-size: 1.2rem; color: #0078d7;
-      display: flex; justify-content: center; gap: 0.5rem; margin-top: 1rem; min-height: 1.5rem;
+      text-align: center;
+      margin-top: 1rem;
+      font-weight: 600;
+      font-size: 1.2rem;
+      color: #0078d7;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      min-height: 1.5rem;
+    }
+    /* Spinner */
+    @keyframes spin {
+      from {transform: rotate(0deg);}
+      to {transform: rotate(360deg);}
     }
     .spinner {
-      width: 18px; height: 18px; border: 3px solid #ccc; border-top: 3px solid #0078d7;
-      border-radius: 50%; animation: spin 1s linear infinite;
+      border: 3px solid #ccc;
+      border-top: 3px solid #0078d7;
+      border-radius: 50%;
+      width: 18px;
+      height: 18px;
+      animation: spin 1s linear infinite;
     }
-    @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-    footer { margin-top: auto; text-align: center; font-size: 0.9rem; color: #888; padding-top: 2rem; }
+    footer {
+      margin-top: auto;
+      text-align: center;
+      font-size: 0.9rem;
+      color: #888;
+      padding: 1rem 0 0;
+      user-select: none;
+    }
+    /* Responsive */
+    @media (max-width: 520px) {
+      h1 {
+        font-size: 1.5rem;
+        padding-right: 40px;
+      }
+      #logo {
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+      }
+    }
   </style>
 </head>
 <body>
   <header>
-    <img id="logo" src="logo-layer-80x89.png" alt="Logo" />
+    <img id="logo" src="logo-layer-80x89.png" alt="Logo" title="Logo" />
     <h1>InnoMedia Auto RAG Upload Page</h1>
   </header>
   <hr class="separator" />
-  <form id="ragForm" method="POST" action="https://script.google.com/macros/s/AKfycbw4sfoVLa_OTg1FQn-jc0JJV5vlrJQtv3bOGpiZxbEM4ouCaXL4Vn5_3xKeLKiwSqwX/exec" enctype="multipart/form-data">
+  <form id="ragUploadForm" novalidate>
     <div>
-      <label for="company">Choose Company Name</label>
-      <select id="company" name="company" required>
+      <label for="companySelect">Choose Company Name</label>
+      <select id="companySelect" name="companySelect" required>
         <option value="">Please choose an option</option>
-        <option value="company-a">Company A</option>
-        <option value="company-b">Company B</option>
-        <option value="company-c">Company C</option>
+        <option value="Company A">Company A</option>
+        <option value="Company B">Company B</option>
+        <option value="Company C">Company C</option>
       </select>
-      <div class="feedback" id="companyFeedback"></div>
+      <div id="companyFeedback" class="feedback" aria-live="polite"></div>
     </div>
 
     <div>
-      <label for="operation">Choose Operation</label>
-      <select id="operation" name="operation" required>
+      <label for="operationSelect">Choose Operation</label>
+      <select id="operationSelect" name="operationSelect" required>
         <option value="">Please choose an option</option>
-        <option value="upload">Upload Files 📤</option>
-        <option value="delete" disabled>Delete All 🗑️</option>
+        <option value="Upload Files">📤 Upload Files</option>
+        <option value="Delete All" disabled>🗑️ Delete All</option>
       </select>
-      <div class="feedback" id="operationFeedback"></div>
+      <div id="operationFeedback" class="feedback" aria-live="polite"></div>
     </div>
 
-    <div>
-      <label for="files">Choose Files to Upload (max 10)</label>
-      <input type="file" id="files" name="upload" multiple required />
-      <div class="feedback" id="fileFeedback"></div>
+    <div class="file-input-wrapper">
+      <label for="fileInput">Choose Files to Upload (max 10)</label>
+      <div id="fileDisplay" class="disabled">No files selected</div>
+      <input type="file" id="fileInput" name="fileInput" multiple disabled accept="*/*" />
+      <div id="fileFeedback" class="feedback" aria-live="polite"></div>
     </div>
 
-    <button type="submit">Submit</button>
+    <button type="submit" id="submit-btn">Submit</button>
   </form>
-  <div id="result"></div>
+  <div id="result" aria-live="polite" role="status" aria-atomic="true"></div>
   <hr class="separator" />
   <footer>&copy; InnoMedia 2025. All Rights reserved</footer>
+
   <script>
-    const form = document.getElementById('ragForm');
-    const company = document.getElementById('company');
-    const operation = document.getElementById('operation');
-    const filesInput = document.getElementById('files');
+    const form = document.getElementById('ragUploadForm');
+    const companySelect = document.getElementById('companySelect');
+    const operationSelect = document.getElementById('operationSelect');
+    const fileInput = document.getElementById('fileInput');
+    const fileDisplay = document.getElementById('fileDisplay');
     const companyFeedback = document.getElementById('companyFeedback');
     const operationFeedback = document.getElementById('operationFeedback');
     const fileFeedback = document.getElementById('fileFeedback');
-    const result = document.getElementById('result');
+    const resultDiv = document.getElementById('result');
+    const submitBtn = document.getElementById('submit-btn');
 
-    operation.addEventListener('change', () => {
-      filesInput.disabled = operation.value !== 'upload';
-      if (operation.value !== 'upload') {
-        filesInput.value = '';
+    // Google Apps Script URL - Replace with your actual deployed script URL
+    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxj_g9ngkh9gMTgWxABhVZfu_4NefmpxgtF1Hh4w_fLfmeMBjnQVaZZOPabq9SEGzcUlg/exec';
+
+    function updateFileInputState() {
+      const isUploadFiles = operationSelect.value === 'Upload Files';
+      fileInput.disabled = !isUploadFiles;
+      
+      if (isUploadFiles) {
+        fileDisplay.classList.remove('disabled');
+        fileDisplay.style.cursor = 'pointer';
+      } else {
+        fileDisplay.classList.add('disabled');
+        fileDisplay.style.cursor = 'not-allowed';
+        fileInput.value = '';
+        fileDisplay.textContent = 'No files selected';
         fileFeedback.textContent = '';
+      }
+    }
+
+    function updateFileDisplay() {
+      const files = fileInput.files;
+      if (files.length === 0) {
+        fileDisplay.textContent = 'No files selected';
+      } else if (files.length === 1) {
+        fileDisplay.textContent = files[0].name;
+      } else {
+        const fileNames = Array.from(files).map(file => file.name);
+        fileDisplay.textContent = fileNames.join(', ');
+      }
+    }
+
+    function validateFieldOnInput() {
+      if (companySelect.value) {
+        companyFeedback.textContent = '';
+      }
+
+      if (operationSelect.value) {
+        operationFeedback.textContent = '';
+      }
+
+      if (operationSelect.value === 'Upload Files' && fileInput.files.length > 0) {
+        if (fileInput.files.length > 10) {
+          fileFeedback.textContent = 'Maximum 10 files allowed.';
+        } else {
+          fileFeedback.textContent = '';
+        }
+      }
+    }
+
+    companySelect.addEventListener('change', validateFieldOnInput);
+    operationSelect.addEventListener('change', () => {
+      updateFileInputState();
+      validateFieldOnInput();
+    });
+
+    fileInput.addEventListener('change', () => {
+      updateFileDisplay();
+      validateFieldOnInput();
+    });
+
+    fileDisplay.addEventListener('click', () => {
+      if (!fileInput.disabled) {
+        fileInput.click();
       }
     });
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
+
+      // Clear all feedback before validating
       companyFeedback.textContent = '';
       operationFeedback.textContent = '';
       fileFeedback.textContent = '';
-      result.innerHTML = '';
+      resultDiv.textContent = '';
 
-      let valid = true;
+      let isValid = true;
 
-      if (!company.value) {
-        companyFeedback.textContent = 'Please choose a company.';
-        valid = false;
+      if (!companySelect.value) {
+        companyFeedback.textContent = 'Please select a company.';
+        isValid = false;
       }
-      if (!operation.value) {
-        operationFeedback.textContent = 'Please choose an operation.';
-        valid = false;
-      }
-      if (operation.value === 'upload' && filesInput.files.length === 0) {
-        fileFeedback.textContent = 'Please choose files to upload.';
-        valid = false;
-      }
-      if (filesInput.files.length > 10) {
-        fileFeedback.textContent = 'You can only upload up to 10 files.';
-        valid = false;
-      }
-      if (!valid) return;
 
-      result.innerHTML = '<span>Operation Started</span><div class="spinner"></div>';
-
-      const formData = new FormData();
-      formData.append("company", company.value);
-      formData.append("operation", operation.value);
-
-      for (const file of filesInput.files) {
-        formData.append("file", file); // Same key 'file' for all
+      if (!operationSelect.value) {
+        operationFeedback.textContent = 'Please select an operation.';
+        isValid = false;
       }
+
+      if (operationSelect.value === 'Upload Files') {
+        if (fileInput.files.length === 0) {
+          fileFeedback.textContent = 'Please select at least one file to upload.';
+          isValid = false;
+        } else if (fileInput.files.length > 10) {
+          fileFeedback.textContent = 'Maximum 10 files allowed.';
+          isValid = false;
+        }
+      }
+
+      if (!isValid) return;
+
+      // Show 'Operation Started' + spinner
+      resultDiv.innerHTML = '<span>Operation Started</span><div class="spinner" aria-hidden="true"></div>';
+      submitBtn.disabled = true;
 
       try {
-        const res = await fetch(
-          "https://script.google.com/macros/s/AKfycbw4sfoVLa_OTg1FQn-jc0JJV5vlrJQtv3bOGpiZxbEM4ouCaXL4Vn5_3xKeLKiwSqwX/exec",
-          { method: "POST", body: formData }
-        );
+        if (operationSelect.value === 'Upload Files') {
+          // Create FormData for file upload
+          const formData = new FormData();
+          formData.append('company', companySelect.value);
+          formData.append('operation', operationSelect.value);
+          
+          // Add all selected files
+          for (let i = 0; i < fileInput.files.length; i++) {
+            formData.append('files', fileInput.files[i]);
+          }
 
-        const text = await res.text();
-        console.log(text);
-        result.innerHTML = `<span>${text}</span>`;
+          // Send to Google Apps Script
+          const response = await fetch(GOOGLE_SCRIPT_URL, {
+            method: 'POST',
+            body: formData
+          });
+
+          if (!response.ok) {
+            throw new Error('Upload failed');
+          }
+        }
       } catch (err) {
-        console.error("Upload failed:", err);
-        result.innerHTML = `<span style="color:red">❌ Upload failed</span>`;
+        console.error('Failed to process request:', err);
+        // You might want to show an error message to the user here
       }
 
+      // Hide message and spinner after 5 seconds
       setTimeout(() => {
-        result.innerHTML = '';
+        resultDiv.textContent = '';
+        submitBtn.disabled = false;
       }, 5000);
     });
+
+    // Initialize file input state
+    updateFileInputState();
   </script>
-
-
-
-
 </body>
 </html>
-

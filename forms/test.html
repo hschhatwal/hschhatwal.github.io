@@ -7,10 +7,10 @@
     async function test() {
       const resultBox = document.getElementById('result');
       try {
-        const response = await fetch("https://script.google.com/macros/s/AKfycbw4sfoVLa_OTg1FQn-jc0JJV5vlrJQtv3bOGpiZxbEM4ouCaXL4Vn5_3xKeLKiwSqwX/exec", {
+        const response = await fetch("https://corsproxy.io/?" + encodeURIComponent("https://script.google.com/macros/s/AKfycbw4sfoVLa_OTg1FQn-jc0JJV5vlrJQtv3bOGpiZxbEM4ouCaXL4Vn5_3xKeLKiwSqwX/exec"), {
           method: "POST",
           headers: {
-            "Content-Type": "test/plain;charset=utf-8"
+            "Content-Type": "application/json"
           },
           body: JSON.stringify({ test: "ping from browser" })
         });

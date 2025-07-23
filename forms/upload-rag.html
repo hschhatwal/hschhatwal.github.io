@@ -6,6 +6,7 @@
   <title>InnoMedia Auto RAG Upload Page</title>
   <link rel="icon" href="logo-layer-80x89.png" />
   <style>
+    /* [Same styles as before, unchanged for brevity] */
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       margin: 0;
@@ -16,94 +17,34 @@
       flex-direction: column;
       min-height: 100vh;
     }
-    header {
-      display: flex;
-      align-items: center;
-      margin-bottom: 1rem;
-    }
-    #logo {
-      width: 60px;
-      height: auto;
-      border-radius: 6px;
-    }
-    h1 {
-      flex-grow: 1;
-      text-align: center;
-      font-size: 1.8rem;
-      padding-right: 48px;
-      margin: 0;
-    }
-    hr.separator {
-      border: none;
-      border-top: 1.5px solid #ddd;
-      margin: 1rem 0 2rem;
-    }
+    header { display: flex; align-items: center; margin-bottom: 1rem; }
+    #logo { width: 60px; height: auto; border-radius: 6px; }
+    h1 { flex-grow: 1; text-align: center; font-size: 1.8rem; padding-right: 48px; margin: 0; }
+    hr.separator { border: none; border-top: 1.5px solid #ddd; margin: 1rem 0 2rem; }
     form {
-      max-width: 480px;
-      margin: 0 auto;
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
+      max-width: 480px; margin: 0 auto; width: 100%; display: flex; flex-direction: column; gap: 1rem;
     }
-    label {
-      font-weight: 600;
-    }
+    label { font-weight: 600; }
     select, input[type="file"], button {
-      width: 100%;
-      padding: 0.5rem 0.75rem;
-      font-size: 1rem;
-      border: 1.5px solid #ccc;
-      border-radius: 6px;
+      width: 100%; padding: 0.5rem 0.75rem; font-size: 1rem;
+      border: 1.5px solid #ccc; border-radius: 6px;
     }
     button {
-      background-color: #0078d7;
-      color: white;
-      font-weight: bold;
-      cursor: pointer;
+      background-color: #0078d7; color: white; font-weight: bold; cursor: pointer;
     }
-    button:hover:not(:disabled) {
-      background-color: #005ea2;
-    }
-    button:disabled {
-      background-color: #aaa;
-      cursor: not-allowed;
-    }
-    .feedback {
-      color: #cc3300;
-      font-size: 0.9rem;
-      min-height: 1.25rem;
-    }
+    button:hover:not(:disabled) { background-color: #005ea2; }
+    button:disabled { background-color: #aaa; cursor: not-allowed; }
+    .feedback { color: #cc3300; font-size: 0.9rem; min-height: 1.25rem; }
     #result {
-      text-align: center;
-      font-weight: 600;
-      font-size: 1.2rem;
-      color: #0078d7;
-      display: flex;
-      justify-content: center;
-      gap: 0.5rem;
-      margin-top: 1rem;
-      min-height: 1.5rem;
+      text-align: center; font-weight: 600; font-size: 1.2rem; color: #0078d7;
+      display: flex; justify-content: center; gap: 0.5rem; margin-top: 1rem; min-height: 1.5rem;
     }
     .spinner {
-      width: 18px;
-      height: 18px;
-      border: 3px solid #ccc;
-      border-top: 3px solid #0078d7;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
+      width: 18px; height: 18px; border: 3px solid #ccc; border-top: 3px solid #0078d7;
+      border-radius: 50%; animation: spin 1s linear infinite;
     }
-    @keyframes spin {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
-    }
-    footer {
-      margin-top: auto;
-      text-align: center;
-      font-size: 0.9rem;
-      color: #888;
-      padding-top: 2rem;
-    }
+    @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    footer { margin-top: auto; text-align: center; font-size: 0.9rem; color: #888; padding-top: 2rem; }
   </style>
 </head>
 <body>
@@ -112,10 +53,10 @@
     <h1>InnoMedia Auto RAG Upload Page</h1>
   </header>
   <hr class="separator" />
-  <form id="ragForm" novalidate>
+  <form id="ragForm" method="POST" action="https://script.google.com/macros/s/AKfycbw4sfoVLa_OTg1FQn-jc0JJV5vlrJQtv3bOGpiZxbEM4ouCaXL4Vn5_3xKeLKiwSqwX/exec" enctype="multipart/form-data">
     <div>
       <label for="company">Choose Company Name</label>
-      <select id="company" required>
+      <select id="company" name="company" required>
         <option value="">Please choose an option</option>
         <option value="company-a">Company A</option>
         <option value="company-b">Company B</option>
@@ -126,7 +67,7 @@
 
     <div>
       <label for="operation">Choose Operation</label>
-      <select id="operation" required>
+      <select id="operation" name="operation" required>
         <option value="">Please choose an option</option>
         <option value="upload">Upload Files 📤</option>
         <option value="delete" disabled>Delete All 🗑️</option>
@@ -136,7 +77,7 @@
 
     <div>
       <label for="files">Choose Files to Upload (max 10)</label>
-      <input type="file" id="files" name="files" multiple disabled />
+      <input type="file" id="files" name="files" multiple disabled required />
       <div class="feedback" id="fileFeedback"></div>
     </div>
 
@@ -151,11 +92,10 @@
     const company = document.getElementById('company');
     const operation = document.getElementById('operation');
     const filesInput = document.getElementById('files');
-    const result = document.getElementById('result');
-
     const companyFeedback = document.getElementById('companyFeedback');
     const operationFeedback = document.getElementById('operationFeedback');
     const fileFeedback = document.getElementById('fileFeedback');
+    const result = document.getElementById('result');
 
     operation.addEventListener('change', () => {
       filesInput.disabled = operation.value !== 'upload';
@@ -165,8 +105,7 @@
       }
     });
 
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
+    form.addEventListener('submit', (e) => {
       companyFeedback.textContent = '';
       operationFeedback.textContent = '';
       fileFeedback.textContent = '';
@@ -178,65 +117,27 @@
         companyFeedback.textContent = 'Please choose a company.';
         valid = false;
       }
-
       if (!operation.value) {
         operationFeedback.textContent = 'Please choose an operation.';
         valid = false;
       }
-
       if (operation.value === 'upload' && filesInput.files.length === 0) {
         fileFeedback.textContent = 'Please choose files to upload.';
         valid = false;
       }
-
       if (filesInput.files.length > 10) {
         fileFeedback.textContent = 'You can only upload up to 10 files.';
         valid = false;
       }
 
-      if (!valid) return;
-
-      result.innerHTML = '<span>Operation Started</span><div class="spinner"></div>';
-
-      // Convert files to base64 and build JSON
-      const files = Array.from(filesInput.files);
-      const encodedFiles = await Promise.all(files.map(file => {
-        return new Promise((resolve, reject) => {
-          const reader = new FileReader();
-          reader.onload = () => {
-            resolve({
-              filename: file.name,
-              mimeType: file.type,
-              content: reader.result.split(',')[1] // base64 only
-            });
-          };
-          reader.onerror = reject;
-          reader.readAsDataURL(file);
-        });
-      }));
-
-      const payload = {
-        company: company.value,
-        operation: operation.value,
-        files: encodedFiles
-      };
-
-      try {
-        await fetch('https://script.google.com/macros/s/AKfycbw4sfoVLa_OTg1FQn-jc0JJV5vlrJQtv3bOGpiZxbEM4ouCaXL4Vn5_3xKeLKiwSqwX/exec', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(payload)
-        });
-      } catch (error) {
-        console.error("Upload failed:", error);
+      if (!valid) {
+        e.preventDefault();
+        return;
       }
 
-      setTimeout(() => {
-        result.innerHTML = '';
-      }, 5000);
+      result.innerHTML = '<span>Operation Started</span><div class="spinner"></div>';
     });
   </script>
 </body>
 </html>
+

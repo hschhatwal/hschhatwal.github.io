@@ -345,33 +345,37 @@
 
       try {
         if (operationSelect.value === 'Upload Files') {
-          // Upload files one by one to Google Apps Script
-          const uploadPromises = [];
+          console.log('Starting file upload process...');
           
+          // Process files one by one using Google Apps Script approach
           for (let i = 0; i < fileInput.files.length; i++) {
             const file = fileInput.files[i];
+            console.log(`Processing file ${i + 1}/${fileInput.files.length}: ${file.name}`);
+            
+            // Convert file to base64 for Google Apps Script
+            const base64Data = await fileToBase64(file);
+            
+            // Create form data with base64 encoded file
             const formData = new FormData();
             formData.append('company', companySelect.value);
             formData.append('operation', operationSelect.value);
-            formData.append('file', file);
             formData.append('fileName', file.name);
-            formData.append('fileIndex', i.toString());
+            formData.append('fileData', base64Data);
+            formData.append('mimeType', file.type);
+            formData.append('fileSize', file.size.toString());
             
-            const uploadPromise = fetch(GOOGLE_SCRIPT_URL, {
+            console.log('Sending file to Google Apps Script...');
+            
+            const response = await fetch(GOOGLE_SCRIPT_URL, {
               method: 'POST',
               body: formData
             });
             
-            uploadPromises.push(uploadPromise);
-          }
-
-          // Wait for all uploads to complete
-          const responses = await Promise.all(uploadPromises);
-          
-          // Check if all uploads were successful
-          for (const response of responses) {
+            const responseText = await response.text();
+            console.log('Response:', responseText);
+            
             if (!response.ok) {
-              throw new Error('One or more uploads failed');
+              throw new Error(`Upload failed for ${file.name}: ${responseText}`);
             }
           }
           
@@ -383,6 +387,8 @@
         setTimeout(() => {
           resultDiv.textContent = '';
         }, 3000);
+        submitBtn.disabled = false;
+        return;
       }
 
       // Hide message and spinner after 5 seconds (success case)
@@ -393,6 +399,20 @@
         submitBtn.disabled = false;
       }, 5000);
     });
+
+    // Helper function to convert file to base64
+    function fileToBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => {
+          // Remove the data:mime/type;base64, prefix
+          const base64 = reader.result.split(',')[1];
+          resolve(base64);
+        };
+        reader.onerror = error => reject(error);
+      });
+    }
 
     // Initialize file input state
     updateFileInputState();

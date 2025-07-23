@@ -345,34 +345,51 @@
 
       try {
         if (operationSelect.value === 'Upload Files') {
-          // Create FormData for file upload
-          const formData = new FormData();
-          formData.append('company', companySelect.value);
-          formData.append('operation', operationSelect.value);
+          // Upload files one by one to Google Apps Script
+          const uploadPromises = [];
           
-          // Add all selected files
           for (let i = 0; i < fileInput.files.length; i++) {
-            formData.append('files', fileInput.files[i]);
+            const file = fileInput.files[i];
+            const formData = new FormData();
+            formData.append('company', companySelect.value);
+            formData.append('operation', operationSelect.value);
+            formData.append('file', file);
+            formData.append('fileName', file.name);
+            formData.append('fileIndex', i.toString());
+            
+            const uploadPromise = fetch(GOOGLE_SCRIPT_URL, {
+              method: 'POST',
+              body: formData
+            });
+            
+            uploadPromises.push(uploadPromise);
           }
 
-          // Send to Google Apps Script
-          const response = await fetch(GOOGLE_SCRIPT_URL, {
-            method: 'POST',
-            body: formData
-          });
-
-          if (!response.ok) {
-            throw new Error('Upload failed');
+          // Wait for all uploads to complete
+          const responses = await Promise.all(uploadPromises);
+          
+          // Check if all uploads were successful
+          for (const response of responses) {
+            if (!response.ok) {
+              throw new Error('One or more uploads failed');
+            }
           }
+          
+          console.log('All files uploaded successfully');
         }
       } catch (err) {
         console.error('Failed to process request:', err);
-        // You might want to show an error message to the user here
+        resultDiv.innerHTML = '<span style="color: #cc3300;">Upload failed. Please try again.</span>';
+        setTimeout(() => {
+          resultDiv.textContent = '';
+        }, 3000);
       }
 
-      // Hide message and spinner after 5 seconds
+      // Hide message and spinner after 5 seconds (success case)
       setTimeout(() => {
-        resultDiv.textContent = '';
+        if (resultDiv.innerHTML.includes('Operation Started')) {
+          resultDiv.textContent = '';
+        }
         submitBtn.disabled = false;
       }, 5000);
     });

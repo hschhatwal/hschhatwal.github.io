@@ -86,7 +86,6 @@
   <div id="result"></div>
   <hr class="separator" />
   <footer>&copy; InnoMedia 2025. All Rights reserved</footer>
-
   <script>
     const form = document.getElementById('ragForm');
     const company = document.getElementById('company');
@@ -105,7 +104,8 @@
       }
     });
 
-    form.addEventListener('submit', (e) => {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
       companyFeedback.textContent = '';
       operationFeedback.textContent = '';
       fileFeedback.textContent = '';
@@ -129,15 +129,41 @@
         fileFeedback.textContent = 'You can only upload up to 10 files.';
         valid = false;
       }
-
-      if (!valid) {
-        e.preventDefault();
-        return;
-      }
+      if (!valid) return;
 
       result.innerHTML = '<span>Operation Started</span><div class="spinner"></div>';
+
+      const formData = new FormData();
+      formData.append("company", company.value);
+      formData.append("operation", operation.value);
+
+      for (const file of filesInput.files) {
+        formData.append("file", file); // Same key 'file' for all
+      }
+
+      try {
+        const res = await fetch(
+          "https://script.google.com/macros/s/AKfycbw4sfoVLa_OTg1FQn-jc0JJV5vlrJQtv3bOGpiZxbEM4ouCaXL4Vn5_3xKeLKiwSqwX/exec",
+          { method: "POST", body: formData }
+        );
+
+        const text = await res.text();
+        console.log(text);
+        result.innerHTML = `<span>${text}</span>`;
+      } catch (err) {
+        console.error("Upload failed:", err);
+        result.innerHTML = `<span style="color:red">❌ Upload failed</span>`;
+      }
+
+      setTimeout(() => {
+        result.innerHTML = '';
+      }, 5000);
     });
   </script>
+
+
+
+
 </body>
 </html>
 

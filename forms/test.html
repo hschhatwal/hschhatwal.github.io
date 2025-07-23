@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<body>
+  <button onclick="test()">Send Test to Script</button>
+  <div id="result"></div>
+  <script>
+    async function test() {
+      const resultBox = document.getElementById('result');
+      try {
+        const response = await fetch("https://script.google.com/macros/s/AKfycbw4sfoVLa_OTg1FQn-jc0JJV5vlrJQtv3bOGpiZxbEM4ouCaXL4Vn5_3xKeLKiwSqwX/exec", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ test: "ping from browser" })
+        });
+        const result = await response.text();
+        resultBox.innerText = "✅ Server says: " + result;
+      } catch (err) {
+        console.error("Fetch failed:", err);
+        resultBox.innerText = "❌ Error: " + err.message;
+      }
+    }
+  </script>
+</body>
+</html>

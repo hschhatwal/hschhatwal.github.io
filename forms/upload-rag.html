@@ -243,6 +243,15 @@
     // Google Apps Script URL - Replace with your actual deployed script URL
     const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxj_g9ngkh9gMTgWxABhVZfu_4NefmpxgtF1Hh4w_fLfmeMBjnQVaZZOPabq9SEGzcUlg/exec';
 
+    // Add debug logging
+    function debugLog(message, data = null) {
+      console.log(`[DEBUG] ${message}`, data || '');
+      // Also show in the result div temporarily for debugging
+      if (data) {
+        console.log(`[DEBUG DATA]`, data);
+      }
+    }
+
     function updateFileInputState() {
       const isUploadFiles = operationSelect.value === 'Upload Files';
       fileInput.disabled = !isUploadFiles;
@@ -345,15 +354,22 @@
 
       try {
         if (operationSelect.value === 'Upload Files') {
-          console.log('Starting file upload process...');
+          debugLog('Starting file upload process...');
+          debugLog('Number of files to upload:', fileInput.files.length);
           
           // Process files one by one using Google Apps Script approach
           for (let i = 0; i < fileInput.files.length; i++) {
             const file = fileInput.files[i];
-            console.log(`Processing file ${i + 1}/${fileInput.files.length}: ${file.name}`);
+            debugLog(`Processing file ${i + 1}/${fileInput.files.length}:`, {
+              name: file.name,
+              size: file.size,
+              type: file.type
+            });
             
             // Convert file to base64 for Google Apps Script
+            debugLog('Converting file to base64...');
             const base64Data = await fileToBase64(file);
+            debugLog('Base64 conversion complete, length:', base64Data.length);
             
             // Create form data with base64 encoded file
             const formData = new FormData();
@@ -364,29 +380,45 @@
             formData.append('mimeType', file.type);
             formData.append('fileSize', file.size.toString());
             
-            console.log('Sending file to Google Apps Script...');
+            debugLog('Form data prepared, sending to Google Apps Script...');
+            debugLog('URL:', GOOGLE_SCRIPT_URL);
             
             const response = await fetch(GOOGLE_SCRIPT_URL, {
               method: 'POST',
               body: formData
             });
             
+            debugLog('Response received:', {
+              status: response.status,
+              statusText: response.statusText,
+              ok: response.ok
+            });
+            
             const responseText = await response.text();
-            console.log('Response:', responseText);
+            debugLog('Response text:', responseText);
             
             if (!response.ok) {
               throw new Error(`Upload failed for ${file.name}: ${responseText}`);
             }
+            
+            // Try to parse the response
+            try {
+              const responseJson = JSON.parse(responseText);
+              debugLog('Parsed response:', responseJson);
+            } catch (parseError) {
+              debugLog('Could not parse response as JSON:', parseError.message);
+            }
           }
           
-          console.log('All files uploaded successfully');
+          debugLog('All files processed successfully');
         }
       } catch (err) {
+        debugLog('Error occurred:', err.message);
         console.error('Failed to process request:', err);
-        resultDiv.innerHTML = '<span style="color: #cc3300;">Upload failed. Please try again.</span>';
+        resultDiv.innerHTML = '<span style="color: #cc3300;">Upload failed. Check console for details.</span>';
         setTimeout(() => {
           resultDiv.textContent = '';
-        }, 3000);
+        }, 5000);
         submitBtn.disabled = false;
         return;
       }

@@ -325,7 +325,7 @@
         <option value="">Please choose an option</option>
         <option value="Upload Files">📤 Upload Files</option>
         <option value="List Files">📋 List Files</option>
-        <option value="Delete All" disabled>🗑️ Delete All</option>
+        <option value="Delete All">🗑️ Delete All</option>
       </select>
       <div id="operationFeedback" class="feedback" aria-live="polite"></div>
     </div>
@@ -386,6 +386,9 @@
 
     function updateFileInputState() {
       const isUploadFiles = operationSelect.value === 'Upload Files';
+      const isDeleteAll = operationSelect.value === 'Delete All';
+      
+      // Enable file input only for Upload Files operation
       fileInput.disabled = !isUploadFiles;
       
       if (isUploadFiles) {
@@ -536,6 +539,52 @@
       }
     }
 
+    async function deleteAll() {
+      try {
+        debugLog('Starting delete all operation...');
+        
+        const formData = new FormData();
+        formData.append('company', companySelect.value);
+        formData.append('operation', 'Delete All');
+        
+        const response = await fetch(GOOGLE_SCRIPT_URL, {
+          method: 'POST',
+          body: formData
+        });
+
+        debugLog('Delete all response received:', {
+          status: response.status,
+          statusText: response.statusText,
+          ok: response.ok
+        });
+
+        const responseText = await response.text();
+        debugLog('Delete all response text:', responseText);
+
+        if (!response.ok) {
+          throw new Error(`Delete operation failed: ${responseText}`);
+        }
+
+        const responseJson = JSON.parse(responseText);
+        debugLog('Parsed delete all response:', responseJson);
+
+        if (!responseJson.success) {
+          throw new Error(responseJson.error || 'Delete operation failed');
+        }
+
+        debugLog('Delete all operation completed successfully');
+
+      } catch (err) {
+        debugLog('Error in delete all operation:', err.message);
+        console.error('Delete all operation failed:', err);
+        resultDiv.innerHTML = '<span style="color: #cc3300;">Delete operation failed. Check console for details.</span>';
+        setTimeout(() => {
+          resultDiv.textContent = '';
+        }, 5000);
+        throw err; // Re-throw to prevent success message
+      }
+    }
+
     companySelect.addEventListener('change', validateFieldOnInput);
     operationSelect.addEventListener('change', () => {
       updateFileInputState();
@@ -652,11 +701,14 @@
         } else if (operationSelect.value === 'List Files') {
           debugLog('Starting file list operation...');
           await listFiles();
+        } else if (operationSelect.value === 'Delete All') {
+          debugLog('Starting delete all operation...');
+          await deleteAll();
         }
       } catch (err) {
         debugLog('Error occurred:', err.message);
         console.error('Failed to process request:', err);
-        resultDiv.innerHTML = '<span style="color: #cc3300;">Upload failed. Check console for details.</span>';
+        resultDiv.innerHTML = '<span style="color: #cc3300;">Operation failed. Check console for details.</span>';
         setTimeout(() => {
           resultDiv.textContent = '';
         }, 5000);

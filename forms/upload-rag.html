@@ -12,24 +12,30 @@
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       margin: 0;
-      padding: 1rem;
+      padding: 0;
       background: #f9f9f9;
       color: #333;
       display: flex;
       flex-direction: column;
-      min-height: 100vh;
+      height: 100vh;
+      overflow: hidden;
     }
-    header {
+    
+    /* Header Section */
+    .header {
       display: flex;
       align-items: center;
-      margin-bottom: 1rem;
+      padding: 1rem;
+      background: white;
+      border-bottom: 1px solid #ddd;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
     #logo {
-      width: 60px;
+      width: 50px;
       height: auto;
       object-fit: contain;
       border-radius: 6px;
-      display: block;
+      margin-right: 1rem;
     }    
     h1 {
       flex-grow: 1;
@@ -37,145 +43,227 @@
       font-weight: 700;
       font-size: 1.8rem;
       margin: 0;
-      padding-right: 48px; /* to balance logo on left */
+      color: #2c3e50;
     }
-    hr.separator {
-      border: none;
-      border-top: 1.5px solid #ddd;
-      margin: 1rem 0 2rem;
-      width: 100%;
-    }
-    form {
-      max-width: 480px;
-      margin: 0 auto;
-      width: 100%;
+    
+    /* Controls Section */
+    .controls {
+      padding: 1rem;
+      background: white;
+      border-bottom: 1px solid #ddd;
       display: flex;
       flex-direction: column;
       gap: 1rem;
     }
-    label {
-      font-weight: 600;
-      margin-bottom: 0.25rem;
-      display: block;
-    }
-    select, input[type="file"] {
-      width: 100%;
-      padding: 0.5rem 0.75rem;
-      font-size: 1rem;
-      border: 1.5px solid #ccc;
-      border-radius: 6px;
-      transition: border-color 0.3s ease, background-color 0.3s ease;
-    }
-    select:focus, input[type="file"]:focus {
-      outline: none;
-      border-color: #0078d7;
-      box-shadow: 0 0 5px #a1c8ff;
-    }
-    select:disabled, input[type="file"]:disabled {
-      background-color: #f5f5f5;
-      color: #999;
-      border-color: #ddd;
-      cursor: not-allowed;
-    }
-    .file-input-wrapper {
-      position: relative;
-      display: flex;
-      flex-direction: column;
-    }
-    #fileDisplay {
-      min-height: 2.5rem;
-      padding: 0.5rem 0.75rem;
-      border: 1.5px solid #ccc;
-      border-radius: 6px;
-      background: white;
-      font-size: 1rem;
+    
+    /* Company Selection */
+    .company-section {
       display: flex;
       align-items: center;
-      color: #666;
-      cursor: pointer;
-      transition: border-color 0.3s ease, background-color 0.3s ease;
+      gap: 1rem;
     }
-    #fileDisplay:hover:not(.disabled) {
-      border-color: #0078d7;
-    }
-    #fileDisplay.disabled {
-      background-color: #f5f5f5;
-      color: #999;
-      border-color: #ddd;
-      cursor: not-allowed;
-    }
-    #fileInput {
-      position: absolute;
-      opacity: 0;
-      width: 100%;
-      height: 100%;
-      cursor: pointer;
-    }
-    #fileInput:disabled {
-      cursor: not-allowed;
-    }
-    button#submit-btn {
-      width: 100%;
-      padding: 0.75rem;
-      font-size: 1.1rem;
+    .company-label {
       font-weight: 600;
-      background-color: #0078d7;
-      color: white;
+      font-size: 1rem;
+      color: #2c3e50;
+      min-width: 80px;
+    }
+    #companySelect {
+      padding: 0.6rem 1rem;
+      font-size: 1rem;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      background: white;
+      min-width: 200px;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    #companySelect:focus {
+      outline: none;
+      border-color: #3498db;
+      box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+    }
+    
+    /* Button Toolbar */
+    .button-toolbar {
+      display: flex;
+      gap: 0;
+      background: #ecf0f1;
+      border-radius: 10px;
+      padding: 4px;
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+      width: fit-content;
+    }
+    .toolbar-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      font-weight: 600;
       border: none;
       border-radius: 6px;
       cursor: pointer;
-      transition: background-color 0.3s ease;
+      transition: all 0.3s ease;
+      background: transparent;
+      color: #7f8c8d;
     }
-    button#submit-btn:hover:not(:disabled) {
-      background-color: #005ea2;
+    .toolbar-btn:hover:not(:disabled) {
+      background: white;
+      transform: translateY(-1px);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
     }
-    button#submit-btn:disabled {
-      background-color: #a0a0a0;
+    .toolbar-btn:disabled {
+      opacity: 0.5;
       cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
     }
-    .feedback {
-      color: #cc3300;
-      font-size: 0.9rem;
-      margin-top: 0.25rem;
-      margin-bottom: 0.5rem;
-      min-height: 1.25rem;
+    .toolbar-btn.upload {
+      color: #2980b9;
     }
-    #result {
-      text-align: center;
-      margin-top: 1rem;
+    .toolbar-btn.upload:hover:not(:disabled) {
+      color: #3498db;
+      background: #ebf3fd;
+    }
+    .toolbar-btn.delete {
+      color: #c0392b;
+    }
+    .toolbar-btn.delete:hover:not(:disabled) {
+      color: #e74c3c;
+      background: #fdf2f2;
+    }
+    
+    /* File Window */
+    .file-window-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      background: white;
+      margin: 1rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      overflow: hidden;
+      position: relative;
+    }
+    
+    .file-window-header {
+      display: flex;
+      background: #34495e;
+      color: white;
       font-weight: 600;
-      font-size: 1.2rem;
-      color: #0078d7;
+      font-size: 0.95rem;
+      border-bottom: 1px solid #2c3e50;
+    }
+    .header-cell {
+      padding: 1rem;
+      border-right: 1px solid #2c3e50;
+    }
+    .header-cell.filename {
+      flex: 1;
+    }
+    .header-cell.size {
+      width: 120px;
+      text-align: right;
+    }
+    .header-cell:last-child {
+      border-right: none;
+    }
+    
+    .file-window-content {
+      flex: 1;
+      overflow-y: auto;
+      position: relative;
+    }
+    
+    .file-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    
+    .file-item {
+      display: flex;
+      align-items: center;
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid #ecf0f1;
+      transition: background-color 0.2s ease;
+    }
+    .file-item:hover {
+      background-color: #f8f9fa;
+    }
+    .file-item:last-child {
+      border-bottom: none;
+    }
+    
+    .file-icon {
+      font-size: 1.3rem;
+      margin-right: 0.75rem;
+      width: 20px;
+      text-align: center;
+    }
+    
+    .file-name {
+      flex: 1;
+      font-weight: 500;
+      word-break: break-word;
+    }
+    
+    .file-size {
+      width: 120px;
+      text-align: right;
+      color: #7f8c8d;
+      font-size: 0.9rem;
+    }
+    
+    .no-files {
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 0.5rem;
-      min-height: 1.5rem;
-    }
-    /* Spinner */
-    @keyframes spin {
-      from {transform: rotate(0deg);}
-      to {transform: rotate(360deg);}
-    }
-    .spinner {
-      border: 3px solid #ccc;
-      border-top: 3px solid #0078d7;
-      border-radius: 50%;
-      width: 18px;
-      height: 18px;
-      animation: spin 1s linear infinite;
-    }
-    footer {
-      margin-top: auto;
-      text-align: center;
-      font-size: 0.9rem;
-      color: #888;
-      padding: 1rem 0 0;
-      user-select: none;
+      height: 200px;
+      color: #95a5a6;
+      font-style: italic;
+      font-size: 1.1rem;
     }
     
-    /* Modal styles */
-    .modal {
+    /* Loading Overlay */
+    .loading-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(255, 255, 255, 0.8);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      backdrop-filter: blur(2px);
+    }
+    .loading-overlay.show {
+      display: flex;
+    }
+    
+    /* Spinner */
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    .spinner {
+      border: 4px solid #ecf0f1;
+      border-top: 4px solid #3498db;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+    }
+    
+    /* Hidden file input */
+    #fileInput {
+      display: none;
+    }
+    
+    /* Error Modal */
+    .error-modal {
       display: none;
       position: fixed;
       z-index: 1000;
@@ -187,261 +275,207 @@
       backdrop-filter: blur(2px);
     }
     
-    .modal-content {
+    .error-modal-content {
       background-color: white;
-      margin: 5% auto;
+      margin: 15% auto;
       padding: 0;
-      border-radius: 8px;
-      width: 80%;
-      max-width: 600px;
-      max-height: 80vh;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-      display: flex;
-      flex-direction: column;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 500px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      overflow: hidden;
     }
     
-    .modal-header {
+    .error-modal-header {
+      background: #e74c3c;
+      color: white;
       padding: 1.5rem;
-      border-bottom: 1px solid #ddd;
-      background-color: #f8f9fa;
-      border-radius: 8px 8px 0 0;
-    }
-    
-    .modal-header h2 {
-      margin: 0;
-      font-size: 1.5rem;
-      color: #333;
       font-weight: 600;
-    }
-    
-    .modal-body {
-      padding: 1.5rem;
-      overflow-y: auto;
-      flex-grow: 1;
-      max-height: 50vh;
-    }
-    
-    .file-list {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-    
-    .file-item {
-      padding: 0.75rem;
-      border-bottom: 1px solid #eee;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    
-    .file-item:last-child {
-      border-bottom: none;
-    }
-    
-    .file-item:hover {
-      background-color: #f8f9fa;
-    }
-    
-    .file-icon {
       font-size: 1.2rem;
     }
     
-    .file-name {
-      flex-grow: 1;
-      font-weight: 500;
-    }
-    
-    .file-size {
-      color: #888;
-      font-size: 0.9rem;
-    }
-    
-    .modal-footer {
+    .error-modal-body {
       padding: 1.5rem;
-      border-top: 1px solid #ddd;
-      text-align: center;
-      background-color: #f8f9fa;
-      border-radius: 0 0 8px 8px;
+      color: #2c3e50;
+      line-height: 1.6;
     }
     
-    .modal-ok-btn {
-      padding: 0.5rem 2rem;
-      font-size: 1rem;
-      font-weight: 600;
-      background-color: #0078d7;
+    .error-modal-footer {
+      padding: 1rem 1.5rem;
+      text-align: right;
+      background: #f8f9fa;
+      border-top: 1px solid #ecf0f1;
+    }
+    
+    .error-ok-btn {
+      padding: 0.6rem 1.5rem;
+      background: #3498db;
       color: white;
       border: none;
       border-radius: 6px;
+      font-weight: 600;
       cursor: pointer;
       transition: background-color 0.3s ease;
     }
-    
-    .modal-ok-btn:hover {
-      background-color: #005ea2;
+    .error-ok-btn:hover {
+      background: #2980b9;
     }
     
-    .no-files {
-      text-align: center;
-      color: #888;
-      font-style: italic;
-      padding: 2rem;
-    }
-    /* Responsive */
-    @media (max-width: 520px) {
+    /* Responsive Design */
+    @media (max-width: 768px) {
       h1 {
-        font-size: 1.5rem;
-        padding-right: 40px;
+        font-size: 1.4rem;
       }
-      #logo {
-        width: 40px;
-        height: 40px;
-        font-size: 1rem;
+      .company-section {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.5rem;
+      }
+      .company-label {
+        min-width: auto;
+      }
+      #companySelect {
+        min-width: auto;
+      }
+      .button-toolbar {
+        width: 100%;
+        justify-content: center;
+      }
+      .toolbar-btn {
+        flex: 1;
+        justify-content: center;
+      }
+      .file-window-container {
+        margin: 0.5rem;
+      }
+      .header-cell, .file-item {
+        padding: 0.5rem;
+      }
+      .file-size {
+        width: 80px;
+        font-size: 0.8rem;
       }
     }
   </style>
 </head>
 <body>
-  <header>
+  <!-- Header -->
+  <div class="header">
     <img id="logo" src="logo-layer-80x89.png" alt="Logo" title="Logo" />
     <h1>InnoMedia Auto RAG Upload Page</h1>
-  </header>
-  <hr class="separator" />
-  <form id="ragUploadForm" novalidate>
-    <div>
-      <label for="companySelect">Choose Company Name</label>
-      <select id="companySelect" name="companySelect" required>
-        <option value="">Please choose an option</option>
+  </div>
+
+  <!-- Controls -->
+  <div class="controls">
+    <!-- Company Selection -->
+    <div class="company-section">
+      <label class="company-label" for="companySelect">Company:</label>
+      <select id="companySelect" name="companySelect">
+        <option value="">Choose a Company</option>
         <option value="Company A">Company A</option>
         <option value="Company B">Company B</option>
         <option value="Company C">Company C</option>
       </select>
-      <div id="companyFeedback" class="feedback" aria-live="polite"></div>
     </div>
 
-    <div>
-      <label for="operationSelect">Choose Operation</label>
-      <select id="operationSelect" name="operationSelect" required>
-        <option value="">Please choose an option</option>
-        <option value="Upload Files">📤 Upload Files</option>
-        <option value="List Files">📋 List Files</option>
-        <option value="Delete All">🗑️ Delete All</option>
-      </select>
-      <div id="operationFeedback" class="feedback" aria-live="polite"></div>
+    <!-- Button Toolbar -->
+    <div class="button-toolbar">
+      <button id="uploadBtn" class="toolbar-btn upload" disabled>
+        <span>📤</span>
+        <span>Upload Files</span>
+      </button>
+      <button id="deleteBtn" class="toolbar-btn delete" disabled>
+        <span>🗑️</span>
+        <span>Delete All</span>
+      </button>
     </div>
+  </div>
 
-    <div class="file-input-wrapper">
-      <label for="fileInput">Choose Files to Upload (max 10)</label>
-      <div id="fileDisplay" class="disabled">No files selected</div>
-      <input type="file" id="fileInput" name="fileInput" multiple disabled accept="*/*" />
-      <div id="fileFeedback" class="feedback" aria-live="polite"></div>
+  <!-- File Window -->
+  <div class="file-window-container">
+    <div class="file-window-header">
+      <div class="header-cell filename">Filename</div>
+      <div class="header-cell size">Size</div>
     </div>
-
-    <button type="submit" id="submit-btn">Submit</button>
-  </form>
-  <div id="result" aria-live="polite" role="status" aria-atomic="true"></div>
-  <hr class="separator" />
-  <footer>&copy; InnoMedia 2025. All Rights reserved</footer>
-
-  <!-- Modal for file list -->
-  <div id="fileListModal" class="modal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2>📁 RAG Files</h2>
+    <div class="file-window-content">
+      <div class="no-files">Select a company to view files</div>
+      <ul id="fileList" class="file-list" style="display: none;"></ul>
+      
+      <!-- Loading Overlay -->
+      <div id="loadingOverlay" class="loading-overlay">
+        <div class="spinner"></div>
       </div>
-      <div class="modal-body">
-        <ul id="fileList" class="file-list">
-          <!-- Files will be populated here -->
-        </ul>
+    </div>
+  </div>
+
+  <!-- Hidden file input -->
+  <input type="file" id="fileInput" multiple accept="*/*" />
+
+  <!-- Error Modal -->
+  <div id="errorModal" class="error-modal">
+    <div class="error-modal-content">
+      <div class="error-modal-header">
+        ⚠️ Error
       </div>
-      <div class="modal-footer">
-        <button class="modal-ok-btn" onclick="closeModal()">OK</button>
+      <div class="error-modal-body" id="errorMessage">
+        An error occurred.
+      </div>
+      <div class="error-modal-footer">
+        <button class="error-ok-btn" onclick="closeErrorModal()">OK</button>
       </div>
     </div>
   </div>
 
   <script>
-    const form = document.getElementById('ragUploadForm');
+    // Elements
     const companySelect = document.getElementById('companySelect');
-    const operationSelect = document.getElementById('operationSelect');
+    const uploadBtn = document.getElementById('uploadBtn');
+    const deleteBtn = document.getElementById('deleteBtn');
     const fileInput = document.getElementById('fileInput');
-    const fileDisplay = document.getElementById('fileDisplay');
-    const companyFeedback = document.getElementById('companyFeedback');
-    const operationFeedback = document.getElementById('operationFeedback');
-    const fileFeedback = document.getElementById('fileFeedback');
-    const resultDiv = document.getElementById('result');
-    const submitBtn = document.getElementById('submit-btn');
+    const fileList = document.getElementById('fileList');
+    const loadingOverlay = document.getElementById('loadingOverlay');
+    const errorModal = document.getElementById('errorModal');
+    const errorMessage = document.getElementById('errorMessage');
+    const noFilesDiv = document.querySelector('.no-files');
 
     // Google Apps Script URL
     const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx12yavLEzKttYolF5AaiHCTobTjQ_0XpVNtS3s3vzl9vAEt_ZiG_m9upZey5zqrTMc6g/exec';
 
-    // Add debug logging
+    // Debug logging
     function debugLog(message, data = null) {
       console.log(`[DEBUG] ${message}`, data || '');
-      // Also show in the result div temporarily for debugging
       if (data) {
         console.log(`[DEBUG DATA]`, data);
       }
     }
 
-    function updateFileInputState() {
-      const isUploadFiles = operationSelect.value === 'Upload Files';
-      const isDeleteAll = operationSelect.value === 'Delete All';
-      
-      // Enable file input only for Upload Files operation
-      fileInput.disabled = !isUploadFiles;
-      
-      if (isUploadFiles) {
-        fileDisplay.classList.remove('disabled');
-        fileDisplay.style.cursor = 'pointer';
-      } else {
-        fileDisplay.classList.add('disabled');
-        fileDisplay.style.cursor = 'not-allowed';
-        fileInput.value = '';
-        fileDisplay.textContent = 'No files selected';
-        fileFeedback.textContent = '';
-      }
+    // Show/hide loading overlay
+    function showLoading() {
+      loadingOverlay.classList.add('show');
     }
 
-    function updateFileDisplay() {
-      const files = fileInput.files;
-      if (files.length === 0) {
-        fileDisplay.textContent = 'No files selected';
-      } else if (files.length === 1) {
-        fileDisplay.textContent = files[0].name;
-      } else {
-        const fileNames = Array.from(files).map(file => file.name);
-        fileDisplay.textContent = fileNames.join(', ');
-      }
+    function hideLoading() {
+      loadingOverlay.classList.remove('show');
     }
 
-    function validateFieldOnInput() {
-      if (companySelect.value) {
-        companyFeedback.textContent = '';
-      }
-
-      if (operationSelect.value) {
-        operationFeedback.textContent = '';
-      }
-
-      if (operationSelect.value === 'Upload Files' && fileInput.files.length > 0) {
-        if (fileInput.files.length > 10) {
-          fileFeedback.textContent = 'Maximum 10 files allowed.';
-        } else {
-          fileFeedback.textContent = '';
-        }
-      }
+    // Error modal functions
+    function showError(message) {
+      errorMessage.textContent = message;
+      errorModal.style.display = 'block';
     }
 
-    // Modal functions
-    function openModal() {
-      document.getElementById('fileListModal').style.display = 'block';
+    function closeErrorModal() {
+      errorModal.style.display = 'none';
     }
 
-    function closeModal() {
-      document.getElementById('fileListModal').style.display = 'none';
+    // Update button states based on company selection
+    function updateButtonStates() {
+      const hasCompany = companySelect.value !== '';
+      uploadBtn.disabled = !hasCompany;
+      deleteBtn.disabled = !hasCompany;
     }
 
+    // Format file size
     function formatFileSize(bytes) {
       if (bytes === 0) return '0 Bytes';
       const k = 1024;
@@ -450,6 +484,7 @@
       return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
     }
 
+    // Get file icon based on extension
     function getFileIcon(fileName) {
       const extension = fileName.split('.').pop().toLowerCase();
       const iconMap = {
@@ -467,21 +502,26 @@
       return iconMap[extension] || '📄';
     }
 
+    // Populate file list
     function populateFileList(files) {
-      const fileList = document.getElementById('fileList');
       fileList.innerHTML = '';
-
+      
       if (!files || files.length === 0) {
-        fileList.innerHTML = '<div class="no-files">No files found in the folder</div>';
+        fileList.style.display = 'none';
+        noFilesDiv.style.display = 'flex';
+        noFilesDiv.textContent = 'No Files Found';
         return;
       }
+
+      noFilesDiv.style.display = 'none';
+      fileList.style.display = 'block';
 
       files.forEach(file => {
         const listItem = document.createElement('li');
         listItem.className = 'file-item';
         
         const icon = getFileIcon(file.name);
-        const size = file.size ? formatFileSize(parseInt(file.size)) : 'Unknown size';
+        const size = file.size ? formatFileSize(parseInt(file.size)) : 'Unknown';
         
         listItem.innerHTML = `
           <span class="file-icon">${icon}</span>
@@ -493,9 +533,19 @@
       });
     }
 
-    async function listFiles() {
+    // Load files for selected company
+    async function loadFiles() {
+      if (!companySelect.value) {
+        fileList.style.display = 'none';
+        noFilesDiv.style.display = 'flex';
+        noFilesDiv.textContent = 'Select a company to view files';
+        return;
+      }
+
+      showLoading();
+      
       try {
-        debugLog('Requesting file list from Google Apps Script...');
+        debugLog('Loading files for company:', companySelect.value);
         
         const formData = new FormData();
         formData.append('company', companySelect.value);
@@ -506,42 +556,87 @@
           body: formData
         });
 
-        debugLog('File list response received:', {
-          status: response.status,
-          statusText: response.statusText,
-          ok: response.ok
-        });
-
         const responseText = await response.text();
-        debugLog('File list response text:', responseText);
+        debugLog('Response text:', responseText);
 
         if (!response.ok) {
-          throw new Error(`Failed to get file list: ${responseText}`);
+          throw new Error(`Failed to load files: ${responseText}`);
         }
 
         const responseJson = JSON.parse(responseText);
-        debugLog('Parsed file list response:', responseJson);
+        debugLog('Parsed response:', responseJson);
 
         if (responseJson.success) {
           populateFileList(responseJson.files);
-          openModal();
         } else {
-          throw new Error(responseJson.error || 'Failed to get file list');
+          throw new Error(responseJson.error || 'Failed to load files');
         }
 
       } catch (err) {
-        debugLog('Error getting file list:', err.message);
-        console.error('Failed to get file list:', err);
-        resultDiv.innerHTML = '<span style="color: #cc3300;">Failed to get file list. Check console for details.</span>';
-        setTimeout(() => {
-          resultDiv.textContent = '';
-        }, 5000);
+        debugLog('Error loading files:', err.message);
+        showError(`Failed to load files: ${err.message}`);
+        // Show current state after error
+        populateFileList([]);
+      } finally {
+        hideLoading();
       }
     }
 
-    async function deleteAll() {
+    // Upload files
+    async function uploadFiles(files) {
+      showLoading();
+      
       try {
-        debugLog('Starting delete all operation...');
+        debugLog('Starting file upload:', files.length + ' files');
+        
+        for (let i = 0; i < files.length; i++) {
+          const file = files[i];
+          debugLog(`Uploading file ${i + 1}/${files.length}:`, file.name);
+          
+          const base64Data = await fileToBase64(file);
+          
+          const formData = new FormData();
+          formData.append('company', companySelect.value);
+          formData.append('operation', 'Upload Files');
+          formData.append('fileName', file.name);
+          formData.append('fileData', base64Data);
+          formData.append('mimeType', file.type);
+          formData.append('fileSize', file.size.toString());
+          
+          const response = await fetch(GOOGLE_SCRIPT_URL, {
+            method: 'POST',
+            body: formData
+          });
+          
+          const responseText = await response.text();
+          
+          if (!response.ok) {
+            throw new Error(`Upload failed for ${file.name}: ${responseText}`);
+          }
+        }
+        
+        debugLog('All files uploaded successfully');
+        
+        // Refresh file list
+        await loadFiles();
+        
+      } catch (err) {
+        debugLog('Upload error:', err.message);
+        showError(`Upload failed: ${err.message}`);
+        await loadFiles(); // Refresh to show current state
+      }
+    }
+
+    // Delete all files
+    async function deleteAllFiles() {
+      if (!confirm('Are you sure you want to delete all files? This action cannot be undone.')) {
+        return;
+      }
+
+      showLoading();
+      
+      try {
+        debugLog('Starting delete all operation');
         
         const formData = new FormData();
         formData.append('company', companySelect.value);
@@ -552,178 +647,32 @@
           body: formData
         });
 
-        debugLog('Delete all response received:', {
-          status: response.status,
-          statusText: response.statusText,
-          ok: response.ok
-        });
-
         const responseText = await response.text();
-        debugLog('Delete all response text:', responseText);
+        debugLog('Delete response:', responseText);
 
         if (!response.ok) {
           throw new Error(`Delete operation failed: ${responseText}`);
         }
 
         const responseJson = JSON.parse(responseText);
-        debugLog('Parsed delete all response:', responseJson);
-
+        
         if (!responseJson.success) {
           throw new Error(responseJson.error || 'Delete operation failed');
         }
-
-        debugLog('Delete all operation completed successfully');
-
+        
+        debugLog('Delete all completed successfully');
+        
+        // Show empty state
+        populateFileList([]);
+        
       } catch (err) {
-        debugLog('Error in delete all operation:', err.message);
-        console.error('Delete all operation failed:', err);
-        resultDiv.innerHTML = '<span style="color: #cc3300;">Delete operation failed. Check console for details.</span>';
-        setTimeout(() => {
-          resultDiv.textContent = '';
-        }, 5000);
-        throw err; // Re-throw to prevent success message
+        debugLog('Delete error:', err.message);
+        showError(`Delete operation failed: ${err.message}`);
+        await loadFiles(); // Refresh to show current state
+      } finally {
+        hideLoading();
       }
     }
-
-    companySelect.addEventListener('change', validateFieldOnInput);
-    operationSelect.addEventListener('change', () => {
-      updateFileInputState();
-      validateFieldOnInput();
-    });
-
-    fileInput.addEventListener('change', () => {
-      updateFileDisplay();
-      validateFieldOnInput();
-    });
-
-    fileDisplay.addEventListener('click', () => {
-      if (!fileInput.disabled) {
-        fileInput.click();
-      }
-    });
-
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-
-      // Clear all feedback before validating
-      companyFeedback.textContent = '';
-      operationFeedback.textContent = '';
-      fileFeedback.textContent = '';
-      resultDiv.textContent = '';
-
-      let isValid = true;
-
-      if (!companySelect.value) {
-        companyFeedback.textContent = 'Please select a company.';
-        isValid = false;
-      }
-
-      if (!operationSelect.value) {
-        operationFeedback.textContent = 'Please select an operation.';
-        isValid = false;
-      }
-
-      if (operationSelect.value === 'Upload Files') {
-        if (fileInput.files.length === 0) {
-          fileFeedback.textContent = 'Please select at least one file to upload.';
-          isValid = false;
-        } else if (fileInput.files.length > 10) {
-          fileFeedback.textContent = 'Maximum 10 files allowed.';
-          isValid = false;
-        }
-      }
-
-      if (!isValid) return;
-
-      // Show 'Operation Started' + spinner
-      resultDiv.innerHTML = '<span>Operation Started</span><div class="spinner" aria-hidden="true"></div>';
-      submitBtn.disabled = true;
-
-      try {
-        if (operationSelect.value === 'Upload Files') {
-          debugLog('Starting file upload process...');
-          debugLog('Number of files to upload:', fileInput.files.length);
-          
-          // Process files one by one using Google Apps Script approach
-          for (let i = 0; i < fileInput.files.length; i++) {
-            const file = fileInput.files[i];
-            debugLog(`Processing file ${i + 1}/${fileInput.files.length}:`, {
-              name: file.name,
-              size: file.size,
-              type: file.type
-            });
-            
-            // Convert file to base64 for Google Apps Script
-            debugLog('Converting file to base64...');
-            const base64Data = await fileToBase64(file);
-            debugLog('Base64 conversion complete, length:', base64Data.length);
-            
-            // Create form data with base64 encoded file
-            const formData = new FormData();
-            formData.append('company', companySelect.value);
-            formData.append('operation', operationSelect.value);
-            formData.append('fileName', file.name);
-            formData.append('fileData', base64Data);
-            formData.append('mimeType', file.type);
-            formData.append('fileSize', file.size.toString());
-            
-            debugLog('Form data prepared, sending to Google Apps Script...');
-            debugLog('URL:', GOOGLE_SCRIPT_URL);
-            
-            const response = await fetch(GOOGLE_SCRIPT_URL, {
-              method: 'POST',
-              body: formData
-            });
-            
-            debugLog('Response received:', {
-              status: response.status,
-              statusText: response.statusText,
-              ok: response.ok
-            });
-            
-            const responseText = await response.text();
-            debugLog('Response text:', responseText);
-            
-            if (!response.ok) {
-              throw new Error(`Upload failed for ${file.name}: ${responseText}`);
-            }
-            
-            // Try to parse the response
-            try {
-              const responseJson = JSON.parse(responseText);
-              debugLog('Parsed response:', responseJson);
-            } catch (parseError) {
-              debugLog('Could not parse response as JSON:', parseError.message);
-            }
-          }
-          
-          debugLog('All files processed successfully');
-        } else if (operationSelect.value === 'List Files') {
-          debugLog('Starting file list operation...');
-          await listFiles();
-        } else if (operationSelect.value === 'Delete All') {
-          debugLog('Starting delete all operation...');
-          await deleteAll();
-        }
-      } catch (err) {
-        debugLog('Error occurred:', err.message);
-        console.error('Failed to process request:', err);
-        resultDiv.innerHTML = '<span style="color: #cc3300;">Operation failed. Check console for details.</span>';
-        setTimeout(() => {
-          resultDiv.textContent = '';
-        }, 5000);
-        submitBtn.disabled = false;
-        return;
-      }
-
-      // Hide message and spinner after 5 seconds (success case)
-      setTimeout(() => {
-        if (resultDiv.innerHTML.includes('Operation Started')) {
-          resultDiv.textContent = '';
-        }
-        submitBtn.disabled = false;
-      }, 5000);
-    });
 
     // Helper function to convert file to base64
     function fileToBase64(file) {
@@ -731,7 +680,6 @@
         const reader = new FileReader();
         reader.readAsDataURL(file);
         reader.onload = () => {
-          // Remove the data:mime/type;base64, prefix
           const base64 = reader.result.split(',')[1];
           resolve(base64);
         };
@@ -739,8 +687,39 @@
       });
     }
 
-    // Initialize file input state
-    updateFileInputState();
+    // Event Listeners
+    companySelect.addEventListener('change', () => {
+      updateButtonStates();
+      loadFiles();
+    });
+
+    uploadBtn.addEventListener('click', () => {
+      fileInput.click();
+    });
+
+    fileInput.addEventListener('change', (e) => {
+      if (e.target.files.length > 0) {
+        if (e.target.files.length > 10) {
+          showError('Maximum 10 files allowed per upload.');
+          return;
+        }
+        uploadFiles(Array.from(e.target.files));
+        // Clear the input so the same files can be selected again if needed
+        e.target.value = '';
+      }
+    });
+
+    deleteBtn.addEventListener('click', deleteAllFiles);
+
+    // Close error modal when clicking outside
+    errorModal.addEventListener('click', (e) => {
+      if (e.target === errorModal) {
+        closeErrorModal();
+      }
+    });
+
+    // Initialize
+    updateButtonStates();
   </script>
 </body>
 </html>

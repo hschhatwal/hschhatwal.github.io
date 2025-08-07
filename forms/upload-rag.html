@@ -857,6 +857,64 @@
       });
     }
 
+    // File validation functions
+    function validateFileSize(file) {
+      const maxSizeBytes = 5 * 1024 * 1024; // 5MB in bytes
+      if (file.size > maxSizeBytes) {
+        return {
+          valid: false,
+          error: `${file.name}: Uploaded files must be less than 5MB in size`
+        };
+      }
+      return { valid: true };
+    }
+
+    function validateFileType(file) {
+      const fileName = file.name.toLowerCase();
+      const fileExtension = fileName.split('.').pop();
+      
+      // Image extensions to block
+      const imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp', 'svg', 'ico', 'tiff', 'tif'];
+      
+      // Other blocked extensions
+      const blockedExtensions = ['md'];
+      
+      const allBlockedExtensions = [...imageExtensions, ...blockedExtensions];
+      
+      if (allBlockedExtensions.includes(fileExtension)) {
+        return {
+          valid: false,
+          error: `${file.name}: Unsupported file type`
+        };
+      }
+      return { valid: true };
+    }
+
+    function validateFiles(files) {
+      const validFiles = [];
+      const errors = [];
+      
+      for (const file of files) {
+        // Check file size
+        const sizeValidation = validateFileSize(file);
+        if (!sizeValidation.valid) {
+          errors.push(sizeValidation.error);
+          continue;
+        }
+        
+        // Check file type
+        const typeValidation = validateFileType(file);
+        if (!typeValidation.valid) {
+          errors.push(typeValidation.error);
+          continue;
+        }
+        
+        validFiles.push(file);
+      }
+      
+      return { validFiles, errors };
+    }
+
     // Event Listeners
     companySelect.addEventListener('change', () => {
       updateButtonStates();
@@ -871,9 +929,24 @@
       if (e.target.files.length > 0) {
         if (e.target.files.length > 10) {
           showError('Maximum 10 files allowed per upload.');
+          e.target.value = '';
           return;
         }
-        uploadFiles(Array.from(e.target.files));
+        
+        // Validate files before upload
+        const { validFiles, errors } = validateFiles(Array.from(e.target.files));
+        
+        // Show errors if any files are invalid
+        if (errors.length > 0) {
+          showError(errors.join('\n'));
+        }
+        
+        // Only upload valid files
+        if (validFiles.length > 0) {
+          uploadFiles(validFiles);
+        }
+        
+        // Clear the input so the same files can be selected again if needed
         e.target.value = '';
       }
     });

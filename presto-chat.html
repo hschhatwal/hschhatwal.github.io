@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Standard RAG Model</title>
+  <link href="https://cdn.jsdelivr.net/npm/@n8n/chat/dist/style.css" rel="stylesheet" />
+	<link rel="icon" href="logo-layer-80x89.png" type="image/png">
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f0f4f8;
+    }
+    .box {
+      background: #fbd415;
+      padding: 40px 60px;
+      border-radius: 16px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+    .box img {
+      max-width: 200px;
+      height: auto;
+      margin-bottom: 20px;
+    }
+    .box h1 {
+      margin: 0;
+      font-size: 1.8rem;
+      color: #2c3e50;
+    }
+		.box h2 {
+      margin: 0;
+      font-size: 1.2rem;
+      color: #2c3e50;
+			text-align: left;
+    }
+		:root {
+			--chat--color-primary: #006eb6;
+			--chat--color-primary-shade-50: #00c4b0;
+			--chat--color-primary-shade-100: #00c4b0;
+			--chat--color-secondary: #20b69e;
+			--chat--color-secondary-shade-50: #1ca08a;
+			--chat--color-white: #ffffff;
+			--chat--color-light: #f2f4f8;
+			--chat--color-light-shade-50: #e6e9f1;
+			--chat--color-light-shade-100: #c2c5cc;
+			--chat--color-medium: #d2d4d9;
+			--chat--color-dark: #101330;
+			--chat--color-disabled: #777980;
+			--chat--color-typing: #404040;
+			
+			--chat--spacing: 0.8rem;
+			
+			--chat--window--width: 800px;
+			--chat--window--height: 700px;
+			
+			--chat--header--background: var(--chat--color-primary);
+			--chat--header--color: var(--chat--color-light);
+			--chat--heading--font-size: 1.5em;
+			--chat--subtitle--line-height: 1.5;
+			
+			--chat--textarea--height: 100px;
+			
+			--chat--message--font-size: 0.8rem;
+			--chat--message-line-height: 1.5;
+			--chat--message--bot--background: var(--chat--color-light-shade-50);
+			--chat--message--user--background: #fbd415;
+			--chat--message--user--color: var(--chat--color-dark);
+		}
+		
+  </style>
+</head>
+<body>
+  <div class="box">
+    <img src="logo-layer-80x89.png" alt="InnoMedia Logo" />
+    <h1>Presto Mobile Application Support</h1>
+    <h1>Standard RAG Model</h1>
+  </div>
+
+
+  <script type="module">
+	import { createChat } from 'https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.bundle.es.js';
+
+	createChat({
+		webhookUrl: 'https://ai-demo.innomedia.com:5678/webhook/929a5f8b-d4fd-47e2-88e6-6379cb3aabc1/chat',
+		initialMessages: [
+			'Hi there! 👋',
+			'My name is Buddytalk. How can I assist you today?'
+		],
+		i18n: {
+			en: {
+				title: 'Presto Assistance Agent',
+				subtitle: "Start a chat. We're here to help you 24/7.",
+				footer: '',
+				getStarted: 'New Conversation',
+				inputPlaceholder: 'Type your question..',
+			},
+		},
+	});
+  </script>
+
+</body>
+</html>
